@@ -1495,6 +1495,18 @@ class Monitor extends BeanModel {
             return await Monitor.isUnderMaintenance(parent.id);
         }
 
+        // Optional: treat weekends as maintenance if enabled
+        // Enable by setting AUTO_MAINTENANCE_WEEKENDS=1 in environment, or turning on the general setting
+        const weekendEnvEnabled = process.env.AUTO_MAINTENANCE_WEEKENDS === "1";
+        const weekendSettingEnabled = await setting("autoMaintenanceWeekends");
+        if (weekendEnvEnabled || weekendSettingEnabled === true) {
+            const now = dayjs();
+            const day = now.day(); // 0 = Sunday, 6 = Saturday
+            if (day === 0 || day === 6) {
+                return true;
+            }
+        }
+
         return false;
     }
 

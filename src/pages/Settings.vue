@@ -183,6 +183,10 @@ export default {
                     this.settings.trustProxy = false;
                 }
 
+                if (this.settings.autoMaintenanceWeekends === undefined) {
+                    this.settings.autoMaintenanceWeekends = false;
+                }
+
                 this.settingsLoaded = true;
             });
         },

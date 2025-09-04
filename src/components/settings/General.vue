@@ -108,6 +108,19 @@
                 </div>
             </div>
 
+            <!-- Weekend Auto-Pause -->
+            <div class="mb-4 form-check">
+                <input
+                    id="autoMaintenanceWeekends"
+                    v-model="settings.autoMaintenanceWeekends"
+                    class="form-check-input"
+                    type="checkbox"
+                />
+                <label class="form-check-label" for="autoMaintenanceWeekends">
+                    {{ $t("Pause monitoring on weekends (maintenance)") }}
+                </label>
+            </div>
+
             <!-- Primary Base URL -->
             <div class="mb-4">
                 <label class="form-label" for="primaryBaseURL">

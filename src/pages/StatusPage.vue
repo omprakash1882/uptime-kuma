@@ -451,6 +451,7 @@ export default {
             updateCountdown: null,
             updateCountdownText: null,
             loading: true,
+            requestMaxPoints: 0,
         };
     },
     computed: {
@@ -771,7 +772,10 @@ export default {
         updateHeartbeatList() {
             // If editMode, it will use the data from websocket.
             if (! this.editMode) {
-                axios.get("/api/status-page/heartbeat/" + this.slug).then((res) => {
+                // Request aggregated 30-day data; UI will provide maxPoints via reloadHeartbeatData on first resize
+                const base = `/api/status-page/heartbeat/${this.slug}`;
+                const params = this.requestMaxPoints ? `?days=30&maxPoints=${this.requestMaxPoints}` : "";
+                axios.get(base + params).then((res) => {
                     const { heartbeatList, uptimeList } = res.data;
 
                     this.$root.heartbeatList = heartbeatList;
@@ -796,6 +800,13 @@ export default {
                     this.updateUpdateTimer();
                 });
             }
+        },
+
+        // Called by HeartbeatBar when it knows how many points fit in the viewport
+        reloadHeartbeatData(maxPoints) {
+            // Avoid too-small requests
+            this.requestMaxPoints = Math.max(10, maxPoints | 0);
+            this.updateHeartbeatList();
         },
 
         /**
